@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>BLUE DOLPHIN HOME 2001</title>
+<title>BLUE DOLPHIN OS v6 — AI PHOTO BOOTH</title>
 <style>
 *{box-sizing:border-box}
 html,body{margin:0;min-height:100%;background:#7eaee0}
@@ -396,12 +396,16 @@ button,input{font:inherit}
 
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/selfie_segmentation.js"></script>
+
+<style>
+#v6badge{position:fixed;top:8px;right:8px;z-index:99999;background:#ffef7a;color:#174a91;border:3px outset #fff;padding:8px 12px;font-weight:900;box-shadow:4px 4px 0 rgba(0,0,0,.25);font-family:Tahoma,sans-serif}#v6badge small{display:block;font-size:9px;text-align:center} 
+</style>
 </head>
-<body>
+<body><div id="v6badge">NEW v6<small>PHOTO FX + AI BACKGROUND</small></div>
 <div class="desktop">
   <div class="shell">
     <div class="titlebar">
-      <span>🐬 BLUE DOLPHIN HOME 2001</span>
+      <span>🐬 BLUE DOLPHIN OS v6 — AI PHOTO BOOTH</span>
       <div class="window-buttons"><span>_</span><span>□</span><span>×</span></div>
     </div>
 
@@ -422,7 +426,7 @@ button,input{font:inherit}
             <button class="active" data-target="home">▶ HOME</button>
             <button data-target="guestbook">▶ GUESTBOOK</button>
             <button data-target="diary">▶ DIARY</button>
-            <button data-target="photo">▶ PHOTO</button>
+            <button data-target="photo">▶ AI PHOTO BOOTH</button>
           </div>
         </div>
 
@@ -506,7 +510,7 @@ button,input{font:inherit}
               <button class="photo" data-text="56K 인터넷에 연결되었습니다.">🌐<small>INTERNET</small></button>
             </div>
             <div class="photo-booth">
-              <h2>🐬 BLUE DOLPHIN PHOTO BOOTH</h2>
+              <h2>🐬 AI PHOTO BOOTH — 배경·캐릭터·필터 합성</h2>
               <div class="camera-stage mirror filter-aqua" id="cameraStage">
                 <video id="cameraVideo" autoplay playsinline muted></video>
                 <canvas id="cameraCanvas"></canvas>
@@ -542,7 +546,7 @@ button,input{font:inherit}
               </div>
               <div class="ai-note">배경 교체는 사람을 자동으로 분리하는 AI 효과예요. 처음 사용할 때 인터넷에서 모델을 불러오며, 머리카락 가장자리는 조명에 따라 조금 흐릴 수 있어요.</div>
               <div class="booth-controls">
-                <button type="button" id="startCamera">📷 카메라 시작</button><button type="button" id="takePhoto">● 한 장 촬영</button><button type="button" id="takeFour">▦ 연속 4컷</button><button type="button" id="mirrorCamera">↔ 좌우반전</button><button type="button" id="downloadPhoto">💾 마지막 사진 저장</button><button type="button" id="stopCamera">■ 종료</button>
+                <button type="button" id="startCamera">📷 카메라 시작</button><button type="button" id="takePhoto">● 효과 포함 촬영</button><button type="button" id="takeFour">▦ 연속 4컷</button><button type="button" id="mirrorCamera">↔ 좌우반전</button><button type="button" id="downloadPhoto">💾 마지막 사진 저장</button><button type="button" id="stopCamera">■ 종료</button>
               </div>
               <div class="shot-strip" id="shotStrip"></div><div class="booth-note"><b>촬영 후 GUESTBOOK에서 “마지막 촬영 사진 첨부”를 누르면 방명록에 사진을 함께 남길 수 있어요.</b></div>
               <div class="booth-note">카메라는 사진을 서버로 보내지 않고 이 브라우저 안에서만 처리합니다. GitHub Pages처럼 HTTPS 주소에서 열어야 웹캠 권한이 정상 작동합니다.</div>
