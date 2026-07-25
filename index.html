@@ -1,0 +1,2075 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>BLUE DOLPHIN 2001</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --blue-dark: #154a98;
+  --blue: #2d75c8;
+  --blue-light: #c9efff;
+  --sky: #72c9f5;
+  --white: #f7fdff;
+  --shadow: rgba(19, 65, 121, 0.35);
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  overflow: hidden;
+  font-family: "Gulim", "Dotum", "Malgun Gothic", sans-serif;
+  color: #174275;
+  background:
+    radial-gradient(circle at 78% 15%, rgba(255,255,255,.95) 0 5%, transparent 6%),
+    radial-gradient(circle at 88% 22%, rgba(255,255,255,.75) 0 8%, transparent 9%),
+    linear-gradient(#68c8f7 0%, #b9efff 55%, #4ca9dc 56%, #0e71b2 100%);
+}
+
+/* 부팅 화면 */
+#bootScreen {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: grid;
+  place-items: center;
+  color: white;
+  background: #061b42;
+  transition: opacity .6s, visibility .6s;
+}
+
+#bootScreen.hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.boot-box {
+  width: min(420px, 86vw);
+  text-align: center;
+}
+
+.boot-dolphin {
+  font-size: 80px;
+  filter: drop-shadow(0 0 20px #50ddff);
+  animation: bob 1.2s ease-in-out infinite alternate;
+}
+
+.boot-title {
+  margin: 10px 0;
+  font-size: 24px;
+  letter-spacing: 2px;
+}
+
+.loading-track {
+  height: 20px;
+  padding: 3px;
+  margin: 22px 0 10px;
+  border: 2px inset #b9d8ff;
+  background: #0b2d66;
+}
+
+.loading-bar {
+  height: 100%;
+  width: 0;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      #44c9ff 0 18px,
+      #d9faff 18px 22px
+    );
+  animation: loading 1.8s forwards;
+}
+
+@keyframes loading {
+  to { width: 100%; }
+}
+
+@keyframes bob {
+  to { transform: translateY(-12px); }
+}
+
+/* 데스크톱 */
+.desktop {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* 구름 */
+.cloud {
+  position: absolute;
+  z-index: 1;
+  width: 190px;
+  height: 65px;
+  border-radius: 50px;
+  background: rgba(255,255,255,.84);
+  filter: blur(.3px);
+  animation: cloudMove 18s linear infinite;
+}
+
+.cloud::before,
+.cloud::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  background: inherit;
+}
+
+.cloud::before {
+  width: 85px;
+  height: 85px;
+  left: 35px;
+  top: -35px;
+}
+
+.cloud::after {
+  width: 100px;
+  height: 100px;
+  right: 20px;
+  top: -50px;
+}
+
+.cloud.one {
+  top: 90px;
+  left: -220px;
+}
+
+.cloud.two {
+  top: 210px;
+  left: -360px;
+  transform: scale(.65);
+  animation-delay: -7s;
+  animation-duration: 23s;
+}
+
+@keyframes cloudMove {
+  to { left: 110%; }
+}
+
+/* 물방울 */
+.bubble {
+  position: absolute;
+  z-index: 2;
+  border: 2px solid rgba(255,255,255,.7);
+  border-radius: 50%;
+  background: rgba(210,250,255,.2);
+  box-shadow:
+    inset 10px 10px 20px rgba(255,255,255,.45),
+    0 0 18px rgba(90,220,255,.45);
+  animation: float 5s ease-in-out infinite;
+}
+
+.bubble.b1 {
+  width: 75px;
+  height: 75px;
+  right: 6%;
+  top: 20%;
+}
+
+.bubble.b2 {
+  width: 38px;
+  height: 38px;
+  right: 18%;
+  top: 12%;
+  animation-delay: -1.5s;
+}
+
+.bubble.b3 {
+  width: 110px;
+  height: 110px;
+  left: 23%;
+  bottom: 9%;
+  animation-delay: -3s;
+}
+
+@keyframes float {
+  50% {
+    transform: translateY(-25px) translateX(9px);
+  }
+}
+
+/* 상단 바 */
+.top-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 400;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  padding: 5px 8px;
+  color: white;
+  background: linear-gradient(#76b5ef, #3267b5);
+  border-bottom: 2px ridge white;
+  text-shadow: 1px 1px #143c77;
+}
+
+.start-button {
+  height: 31px;
+  padding: 0 15px;
+  border: 3px outset white;
+  color: #16477f;
+  font-weight: bold;
+  background: linear-gradient(#f4fdff, #89bde9);
+}
+
+.top-title {
+  flex: 1;
+  text-align: center;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.clock {
+  min-width: 70px;
+  text-align: center;
+}
+
+/* 아이콘 */
+.desktop-icons {
+  position: absolute;
+  top: 62px;
+  left: 14px;
+  z-index: 30;
+  display: grid;
+  gap: 13px;
+}
+
+.desktop-icon {
+  width: 78px;
+  padding: 4px;
+  border: 0;
+  color: white;
+  text-align: center;
+  text-shadow: 1px 2px 4px #173f72;
+  background: transparent;
+}
+
+.desktop-icon .emoji {
+  display: block;
+  font-size: 38px;
+  filter: drop-shadow(2px 3px 2px rgba(0,0,0,.25));
+}
+
+.desktop-icon .label {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.desktop-icon:hover {
+  background: rgba(255,255,255,.2);
+  outline: 1px dotted white;
+}
+
+/* 작업 영역 */
+.workspace {
+  position: absolute;
+  top: 50px;
+  right: 12px;
+  bottom: 52px;
+  left: 105px;
+  z-index: 50;
+}
+
+/* XP 창 */
+.window {
+  position: absolute;
+  display: none;
+  width: min(920px, 85vw);
+  height: min(650px, 78vh);
+  left: 6%;
+  top: 4%;
+  overflow: hidden;
+  border: 3px outset #effaff;
+  background: #d7efff;
+  box-shadow: 12px 14px 0 var(--shadow);
+}
+
+.window.open {
+  display: block;
+}
+
+.window.active {
+  z-index: 200;
+}
+
+.window.maximized {
+  left: 0 !important;
+  top: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.title-bar {
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 6px;
+  color: white;
+  font-size: 13px;
+  font-weight: bold;
+  user-select: none;
+  cursor: move;
+  background: linear-gradient(
+    90deg,
+    #2456a5,
+    #79b4ef,
+    #3469b5
+  );
+}
+
+.window-buttons {
+  display: flex;
+  gap: 3px;
+}
+
+.window-buttons button {
+  width: 27px;
+  height: 25px;
+  padding: 0;
+  border: 2px outset white;
+  color: #194781;
+  font-weight: bold;
+  background: #cde8ff;
+}
+
+.window-content {
+  height: calc(100% - 35px);
+  overflow: auto;
+}
+
+/* 메인 창 */
+#homeWindow {
+  display: block;
+  width: min(1050px, 90vw);
+  height: min(720px, 84vh);
+  left: 1%;
+  top: 1%;
+}
+
+.home-content {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 75% 65%, rgba(255,255,255,.4), transparent 28%),
+    linear-gradient(160deg, #ddf8ff 0%, #75cbed 55%, #126aa6 100%);
+}
+
+.horizon {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 38%;
+  background:
+    radial-gradient(ellipse at center top, #74e1ff 0 10%, transparent 40%),
+    linear-gradient(#46b7d9, #0870ae);
+}
+
+.grid-floor {
+  position: absolute;
+  left: -10%;
+  right: -10%;
+  bottom: -4%;
+  height: 42%;
+  opacity: .38;
+  background:
+    linear-gradient(rgba(255,255,255,.55) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.55) 1px, transparent 1px);
+  background-size: 55px 28px;
+  transform: perspective(250px) rotateX(55deg);
+}
+
+.hero-card {
+  position: absolute;
+  left: 4%;
+  top: 6%;
+  z-index: 5;
+  width: 56%;
+  padding: 18px;
+  border: 3px outset white;
+  background: rgba(239,251,255,.88);
+  box-shadow: 9px 10px 0 rgba(28,80,135,.2);
+}
+
+.hero-small {
+  font-size: 11px;
+  font-weight: bold;
+  letter-spacing: 2px;
+}
+
+.hero-card h1 {
+  margin: 10px 0;
+  color: white;
+  font-size: clamp(42px, 6vw, 76px);
+  line-height: .86;
+  text-shadow:
+    4px 4px #3974be,
+    0 0 15px #48cfff;
+}
+
+.hero-card p {
+  line-height: 1.7;
+  font-weight: bold;
+}
+
+.button-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.xp-button {
+  padding: 9px 15px;
+  border: 3px outset white;
+  color: #174b86;
+  font-weight: bold;
+  background: linear-gradient(#ffffff, #a9d5fa);
+}
+
+.xp-button:active {
+  border-style: inset;
+}
+
+/* 돌고래 */
+.dolphin-area {
+  position: absolute;
+  right: 3%;
+  bottom: 8%;
+  z-index: 4;
+  width: 45%;
+  height: 55%;
+}
+
+.dolphin {
+  position: absolute;
+  right: 10%;
+  bottom: 17%;
+  width: 310px;
+  height: 125px;
+  border-radius: 60% 45% 45% 60%;
+  background: linear-gradient(160deg, #d8fbff, #4cb6df 48%, #176fa9);
+  box-shadow:
+    inset 18px 15px 25px rgba(255,255,255,.5),
+    0 25px 30px rgba(16,72,114,.35);
+  transform: rotate(-8deg);
+  cursor: pointer;
+  animation: dolphinFloat 3s ease-in-out infinite;
+}
+
+.dolphin::before {
+  content: "";
+  position: absolute;
+  right: -72px;
+  top: 35px;
+  width: 90px;
+  height: 50px;
+  border-radius: 20% 80% 80% 20%;
+  background: linear-gradient(#86d8ef, #1b7bb4);
+  transform: rotate(4deg);
+}
+
+.dolphin::after {
+  content: "";
+  position: absolute;
+  left: 120px;
+  top: -52px;
+  width: 70px;
+  height: 80px;
+  clip-path: polygon(50% 0, 100% 100%, 0 76%);
+  background: linear-gradient(135deg, #9ae9f5, #1774aa);
+}
+
+.fin {
+  position: absolute;
+  left: 125px;
+  bottom: -55px;
+  width: 95px;
+  height: 70px;
+  clip-path: polygon(0 0, 100% 15%, 30% 100%);
+  background: linear-gradient(135deg, #68cbe7, #106fa9);
+}
+
+.eye {
+  position: absolute;
+  left: 48px;
+  top: 35px;
+  width: 10px;
+  height: 10px;
+  z-index: 3;
+  border-radius: 50%;
+  background: #0a2443;
+  box-shadow: 0 0 0 3px white;
+}
+
+.smile {
+  position: absolute;
+  left: 14px;
+  top: 62px;
+  width: 50px;
+  height: 22px;
+  border-bottom: 3px solid #18537b;
+  border-radius: 50%;
+}
+
+@keyframes dolphinFloat {
+  50% {
+    transform: translateY(-15px) rotate(-5deg);
+  }
+}
+
+/* 도우미 창 */
+.assistant {
+  position: absolute;
+  right: 3%;
+  top: 5%;
+  z-index: 8;
+  width: 325px;
+  overflow: hidden;
+  border: 3px solid #111;
+  border-radius: 18px;
+  color: #111;
+  background: #fffdd2;
+  box-shadow: 8px 9px rgba(0,0,0,.2);
+}
+
+.assistant-title {
+  padding: 8px 12px;
+  border-bottom: 2px solid #111;
+  font-weight: bold;
+}
+
+.assistant-message {
+  min-height: 105px;
+  margin: 10px;
+  padding: 14px;
+  border: 3px inset white;
+  background: white;
+  line-height: 1.5;
+}
+
+.assistant-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px;
+  padding: 0 10px 11px;
+}
+
+.assistant-buttons button {
+  padding: 8px;
+  border: 2px outset white;
+  font-weight: bold;
+  background: #f1eed5;
+}
+
+/* 접속 상태 */
+.status-box {
+  position: absolute;
+  left: 4%;
+  bottom: 5%;
+  z-index: 7;
+  width: 320px;
+  padding: 12px;
+  border: 3px outset white;
+  background: rgba(232,248,255,.93);
+}
+
+.status-box strong {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.status-line {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 0;
+  border-bottom: 1px dotted #6699ce;
+}
+
+/* 일반 창 */
+.standard {
+  padding: 22px;
+  background: linear-gradient(#eefbff, #c7e7ff);
+}
+
+.standard h2 {
+  margin-top: 0;
+  color: #1c5aa4;
+}
+
+.profile-layout {
+  display: grid;
+  grid-template-columns: 210px 1fr;
+  gap: 20px;
+}
+
+.avatar-box {
+  display: grid;
+  place-items: center;
+  min-height: 210px;
+  border: 4px ridge white;
+  font-size: 110px;
+  background: linear-gradient(135deg, #57baf2, #e0fbff);
+}
+
+.info-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: rgba(255,255,255,.7);
+}
+
+.info-table th,
+.info-table td {
+  padding: 10px;
+  border: 1px solid #76a9d5;
+  text-align: left;
+}
+
+.info-table th {
+  width: 110px;
+  color: white;
+  background: #4f89cb;
+}
+
+.meter {
+  height: 20px;
+  padding: 2px;
+  border: 3px inset white;
+  background: #acd4ef;
+}
+
+.meter span {
+  display: block;
+  width: 93%;
+  height: 100%;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      #3ca7ed 0 15px,
+      #d8f8ff 15px 18px
+    );
+}
+
+/* 방명록 */
+.guest-list {
+  max-height: 390px;
+  overflow: auto;
+  padding: 6px;
+  border: 3px inset white;
+  background: white;
+}
+
+.guest-entry {
+  padding: 10px;
+  border-bottom: 1px dotted #6798cb;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.guest-form {
+  display: grid;
+  grid-template-columns: 140px 1fr auto;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.guest-form input {
+  min-width: 0;
+  padding: 9px;
+  border: 3px inset white;
+  color: #16477f;
+}
+
+/* 다이어리 */
+details {
+  margin-bottom: 10px;
+  border: 2px outset white;
+  background: #d9edff;
+}
+
+summary {
+  padding: 12px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+details p {
+  padding: 0 12px 13px;
+  line-height: 1.7;
+}
+
+/* 사진첩 */
+.photo-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 13px;
+}
+
+.photo-card {
+  min-height: 150px;
+  display: grid;
+  place-items: center;
+  border: 4px outset white;
+  color: #17518d;
+  font-size: 48px;
+  background: linear-gradient(135deg, #58b9f2, #dcfbff);
+}
+
+.photo-card small {
+  display: block;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+/* 음악 플레이어 */
+#musicWindow {
+  width: 450px;
+  height: 250px;
+  left: 42%;
+  top: 52%;
+}
+
+.player {
+  display: grid;
+  grid-template-columns: 135px 1fr;
+  gap: 16px;
+  align-items: center;
+  height: 100%;
+  padding: 18px;
+  color: #d7f6ff;
+  background: #102c5b;
+}
+
+.cd {
+  font-size: 95px;
+  text-align: center;
+  filter: drop-shadow(0 0 12px #41cfff);
+}
+
+.cd.playing {
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.equalizer {
+  height: 48px;
+  display: flex;
+  align-items: flex-end;
+  gap: 5px;
+  margin: 12px 0;
+}
+
+.equalizer span {
+  display: block;
+  width: 12px;
+  height: 20%;
+  background: #5cd8ff;
+}
+
+.player.playing .equalizer span {
+  animation: equalize .55s ease-in-out infinite alternate;
+}
+
+.player.playing .equalizer span:nth-child(2) {
+  animation-delay: .1s;
+}
+
+.player.playing .equalizer span:nth-child(3) {
+  animation-delay: .25s;
+}
+
+.player.playing .equalizer span:nth-child(4) {
+  animation-delay: .05s;
+}
+
+.player.playing .equalizer span:nth-child(5) {
+  animation-delay: .3s;
+}
+
+@keyframes equalize {
+  to { height: 100%; }
+}
+
+.small-note {
+  font-size: 10px;
+  line-height: 1.4;
+}
+
+/* 시작 메뉴 */
+.start-menu {
+  position: absolute;
+  left: 6px;
+  bottom: 43px;
+  z-index: 600;
+  display: none;
+  width: 270px;
+  border: 3px outset white;
+  background: #d7ecff;
+  box-shadow: 8px 9px var(--shadow);
+}
+
+.start-menu.show {
+  display: block;
+}
+
+.start-user {
+  padding: 16px;
+  color: white;
+  font-weight: bold;
+  background: linear-gradient(#79b2ec, #336ab8);
+}
+
+.start-menu button {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  border: 0;
+  border-bottom: 1px solid #9bc1e5;
+  color: #16477f;
+  text-align: left;
+  font-weight: bold;
+  background: #eef9ff;
+}
+
+.start-menu button:hover {
+  background: #c9e8ff;
+}
+
+/* 작업 표시줄 */
+.taskbar {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 500;
+  height: 43px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 8px;
+  border-top: 2px ridge white;
+  background: linear-gradient(#77b0ea, #3268b5);
+}
+
+.task-button {
+  max-width: 230px;
+  height: 31px;
+  overflow: hidden;
+  padding: 0 12px;
+  border: 2px outset white;
+  color: #17467e;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: bold;
+  background: linear-gradient(#eefaff, #92bee9);
+}
+
+.task-button.active {
+  border-style: inset;
+  background: #8db8df;
+}
+
+/* 팝업 */
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  display: none;
+  place-items: center;
+  background: rgba(4,23,58,.45);
+}
+
+.modal.show {
+  display: grid;
+}
+
+.dialog {
+  width: min(410px, 90vw);
+  overflow: hidden;
+  border: 3px outset white;
+  color: #111;
+  background: #fffed5;
+  box-shadow: 12px 14px rgba(0,0,0,.25);
+}
+
+.dialog-title {
+  padding: 8px;
+  color: white;
+  font-weight: bold;
+  background: linear-gradient(90deg, #2a5daa, #7db5eb);
+}
+
+.dialog p {
+  padding: 18px;
+  margin: 0;
+  line-height: 1.6;
+}
+
+.dialog .xp-button {
+  width: calc(100% - 36px);
+  margin: 0 18px 18px;
+}
+
+/* 클릭 반짝임 */
+.spark {
+  position: fixed;
+  z-index: 99999;
+  pointer-events: none;
+  color: white;
+  font-size: 18px;
+  text-shadow: 0 0 8px #27c8ff;
+  animation: spark .75s forwards;
+}
+
+@keyframes spark {
+  to {
+    opacity: 0;
+    transform: translateY(-28px) scale(1.8);
+  }
+}
+
+/* 작은 화면 */
+@media (max-width: 850px) {
+  html,
+  body {
+    height: auto;
+    overflow: auto;
+  }
+
+  .desktop {
+    min-height: 100vh;
+    overflow: visible;
+  }
+
+  .top-bar,
+  .taskbar {
+    position: fixed;
+  }
+
+  .desktop-icons {
+    display: none;
+  }
+
+  .workspace {
+    position: relative;
+    inset: auto;
+    min-height: 100vh;
+    padding: 55px 8px 58px;
+  }
+
+  .window,
+  #homeWindow,
+  #musicWindow {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    display: none;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 650px;
+    margin-bottom: 12px;
+  }
+
+  .window.open,
+  #homeWindow {
+    display: block;
+  }
+
+  .window.maximized {
+    height: auto !important;
+  }
+
+  .hero-card {
+    position: relative;
+    left: auto;
+    top: auto;
+    width: 100%;
+  }
+
+  .assistant {
+    position: relative;
+    right: auto;
+    top: auto;
+    width: 100%;
+    margin-top: 14px;
+  }
+
+  .dolphin-area {
+    right: 0;
+    bottom: 70px;
+    transform: scale(.75);
+  }
+
+  .status-box {
+    right: 12px;
+    left: 12px;
+    bottom: 12px;
+    width: auto;
+  }
+
+  .profile-layout,
+  .guest-form {
+    grid-template-columns: 1fr;
+  }
+
+  .photo-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div id="bootScreen">
+  <div class="boot-box">
+    <div class="boot-dolphin">🐬</div>
+    <div class="boot-title">BLUE DOLPHIN OS 2001</div>
+    <div class="loading-track">
+      <div class="loading-bar"></div>
+    </div>
+    <small>파란 미래에 연결하는 중...</small>
+  </div>
+</div>
+
+<div class="desktop" id="desktop">
+
+  <div class="cloud one"></div>
+  <div class="cloud two"></div>
+
+  <div class="bubble b1"></div>
+  <div class="bubble b2"></div>
+  <div class="bubble b3"></div>
+
+  <header class="top-bar">
+    <button class="start-button" id="startButton">▣ START</button>
+    <div class="top-title">BLUE DOLPHIN INTERNET HOME</div>
+    <div class="clock" id="clock">00:00</div>
+  </header>
+
+  <aside class="desktop-icons">
+
+    <button class="desktop-icon" data-open="profile">
+      <span class="emoji">🐬</span>
+      <span class="label">내 정보</span>
+    </button>
+
+    <button class="desktop-icon" data-open="guestbook">
+      <span class="emoji">💌</span>
+      <span class="label">방명록</span>
+    </button>
+
+    <button class="desktop-icon" data-open="diary">
+      <span class="emoji">📓</span>
+      <span class="label">다이어리</span>
+    </button>
+
+    <button class="desktop-icon" data-open="album">
+      <span class="emoji">📷</span>
+      <span class="label">사진첩</span>
+    </button>
+
+    <button class="desktop-icon" data-open="music">
+      <span class="emoji">💿</span>
+      <span class="label">음악</span>
+    </button>
+
+  </aside>
+
+  <main class="workspace">
+
+    <section class="window open active" id="homeWindow" data-name="home">
+
+      <div class="title-bar">
+        <span>🐬 BLUE_DOLPHIN_HOME.EXE</span>
+
+        <div class="window-buttons">
+          <button data-minimize>_</button>
+          <button data-maximize>□</button>
+          <button data-close>×</button>
+        </div>
+      </div>
+
+      <div class="window-content home-content">
+
+        <div class="horizon"></div>
+        <div class="grid-floor"></div>
+
+        <div class="hero-card">
+          <div class="hero-small">SINCE 2001 · 56K ONLINE</div>
+
+          <h1>
+            WELCOME TO<br>
+            MY BLUE FUTURE
+          </h1>
+
+          <p>
+            2001년의 인터넷이 상상한<br>
+            투명하고 파란 미래에 접속했습니다.
+          </p>
+
+          <div class="button-row">
+            <button class="xp-button" data-open="guestbook">
+              방명록 열기
+            </button>
+
+            <button class="xp-button" id="moodButton">
+              오늘의 기분
+            </button>
+          </div>
+        </div>
+
+        <div class="assistant">
+
+          <div class="assistant-title">
+            DOLPHIN ASSISTANT
+          </div>
+
+          <div class="assistant-message">
+            <strong>무엇을 도와 드릴까요?</strong>
+
+            <p id="assistantText">
+              돌고래를 클릭하면 메시지가 바뀝니다.
+            </p>
+          </div>
+
+          <div class="assistant-buttons">
+            <button id="findFuture">미래 찾기</button>
+            <button id="changeSky">하늘 변경</button>
+          </div>
+
+        </div>
+
+        <div class="dolphin-area">
+          <div class="dolphin" id="dolphin">
+            <div class="eye"></div>
+            <div class="smile"></div>
+            <div class="fin"></div>
+          </div>
+        </div>
+
+        <div class="status-box">
+
+          <strong>CONNECTION STATUS</strong>
+
+          <div class="status-line">
+            <span>dream signal</span>
+            <b id="signal">98%</b>
+          </div>
+
+          <div class="status-line">
+            <span>mood</span>
+            <b id="mood">clear</b>
+          </div>
+
+          <div class="status-line">
+            <span>modem</span>
+            <b>56K connected</b>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <section class="window" id="profileWindow" data-name="profile">
+
+      <div class="title-bar">
+        <span>MY_PROFILE.TXT</span>
+
+        <div class="window-buttons">
+          <button data-minimize>_</button>
+          <button data-maximize>□</button>
+          <button data-close>×</button>
+        </div>
+      </div>
+
+      <div class="window-content standard">
+
+        <h2>HELLO, INTERNET!</h2>
+
+        <div class="profile-layout">
+
+          <div class="avatar-box">🐬</div>
+
+          <div>
+
+            <table class="info-table">
+              <tr>
+                <th>이름</th>
+                <td>Blue Dolphin</td>
+              </tr>
+
+              <tr>
+                <th>상태</th>
+                <td>ONLINE</td>
+              </tr>
+
+              <tr>
+                <th>취미</th>
+                <td>인터넷 바다 산책, 구름 저장</td>
+              </tr>
+
+              <tr>
+                <th>좋아함</th>
+                <td>파란색, CRT, 오래된 홈페이지</td>
+              </tr>
+
+              <tr>
+                <th>접속</th>
+                <td>2001.07.26</td>
+              </tr>
+            </table>
+
+            <h3>INTERNET POWER</h3>
+
+            <div class="meter">
+              <span></span>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="window" id="guestbookWindow" data-name="guestbook">
+
+      <div class="title-bar">
+        <span>GUESTBOOK.DAT</span>
+
+        <div class="window-buttons">
+          <button data-minimize>_</button>
+          <button data-maximize>□</button>
+          <button data-close>×</button>
+        </div>
+      </div>
+
+      <div class="window-content standard">
+
+        <h2>♡ GUESTBOOK</h2>
+
+        <div class="guest-list" id="guestList"></div>
+
+        <form class="guest-form" id="guestForm">
+
+          <input
+            id="guestName"
+            maxlength="15"
+            placeholder="이름"
+          >
+
+          <input
+            id="guestMessage"
+            maxlength="100"
+            placeholder="메시지를 남겨 주세요"
+          >
+
+          <button class="xp-button" type="submit">
+            남기기
+          </button>
+
+        </form>
+      </div>
+    </section>
+
+    <section class="window" id="diaryWindow" data-name="diary">
+
+      <div class="title-bar">
+        <span>DIARY_2001.TXT</span>
+
+        <div class="window-buttons">
+          <button data-minimize>_</button>
+          <button data-maximize>□</button>
+          <button data-close>×</button>
+        </div>
+      </div>
+
+      <div class="window-content standard">
+
+        <h2>파란 미래의 기록</h2>
+
+        <details open>
+          <summary>2001.07.25 — 인터넷 바다</summary>
+
+          <p>
+            오늘은 인터넷 바다에 접속했다.
+            화면 속 구름이 실제 하늘보다 더 파랬다.
+          </p>
+        </details>
+
+        <details>
+          <summary>2001.07.26 — 돌고래 도우미</summary>
+
+          <p>
+            돌고래 도우미가 아무 말 없이 나를 바라봤다.
+            그래도 온라인이라는 사실만으로 안심됐다.
+          </p>
+        </details>
+
+        <details>
+          <summary>2001.07.27 — 미래</summary>
+
+          <p>
+            우리가 상상했던 미래는
+            생각보다 조용하고 투명했다.
+          </p>
+        </details>
+
+      </div>
+    </section>
+
+    <section class="window" id="albumWindow" data-name="album">
+
+      <div class="title-bar">
+        <span>PHOTO_ALBUM</span>
+
+        <div class="window-buttons">
+          <button data-minimize>_</button>
+          <button data-maximize>□</button>
+          <button data-close>×</button>
+        </div>
+      </div>
+
+      <div class="window-content standard">
+
+        <h2>PHOTO ALBUM</h2>
+
+        <div class="photo-grid">
+
+          <button
+            class="photo-card"
+            data-message="구름 서버를 열었습니다."
+          >
+            ☁️
+            <small>CLOUD SERVER</small>
+          </button>
+
+          <button
+            class="photo-card"
+            data-message="돌고래 파일을 발견했습니다."
+          >
+            🐬
+            <small>DOLPHIN FILE</small>
+          </button>
+
+          <button
+            class="photo-card"
+            data-message="물방울 데이터가 반짝입니다."
+          >
+            💧
+            <small>WATER DATA</small>
+          </button>
+
+          <button
+            class="photo-card"
+            data-message="오래된 컴퓨터가 부팅 중입니다."
+          >
+            🖥️
+            <small>CRT COMPUTER</small>
+          </button>
+
+          <button
+            class="photo-card"
+            data-message="버블 메모리가 떠다닙니다."
+          >
+            🫧
+            <small>BUBBLE MEMORY</small>
+          </button>
+
+          <button
+            class="photo-card"
+            data-message="56K 인터넷에 연결되었습니다."
+          >
+            🌐
+            <small>INTERNET</small>
+          </button>
+
+        </div>
+      </div>
+    </section>
+
+    <section class="window" id="musicWindow" data-name="music">
+
+      <div class="title-bar">
+        <span>AQUA PLAYER</span>
+
+        <div class="window-buttons">
+          <button data-minimize>_</button>
+          <button data-close>×</button>
+        </div>
+      </div>
+
+      <div class="window-content player" id="player">
+
+        <div class="cd" id="cd">💿</div>
+
+        <div>
+
+          <strong>Aqua First Day</strong>
+
+          <div class="equalizer">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+
+          <button class="xp-button" id="playButton">
+            ▶ PLAY
+          </button>
+
+          <p class="small-note">
+            버튼을 누르면 짧은 레트로 전자음이 재생됩니다.
+          </p>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <div class="start-menu" id="startMenu">
+
+    <div class="start-user">
+      🐬 Blue Dolphin
+    </div>
+
+    <button data-open="home">🏠 홈</button>
+    <button data-open="profile">🐬 내 정보</button>
+    <button data-open="guestbook">💌 방명록</button>
+    <button data-open="diary">📓 다이어리</button>
+    <button data-open="album">📷 사진첩</button>
+    <button data-open="music">💿 음악 플레이어</button>
+    <button id="shutdownButton">⏻ 접속 종료</button>
+
+  </div>
+
+  <footer class="taskbar" id="taskbar">
+
+    <button class="task-button active" data-open="home">
+      🐬 BLUE_DOLPHIN_HOME
+    </button>
+
+  </footer>
+
+</div>
+
+<div class="modal" id="modal">
+
+  <div class="dialog">
+
+    <div class="dialog-title">
+      DOLPHIN MESSAGE
+    </div>
+
+    <p id="modalText"></p>
+
+    <button class="xp-button" id="modalClose">
+      확인
+    </button>
+
+  </div>
+
+</div>
+
+<script>
+const $ = selector => document.querySelector(selector);
+const $$ = selector => [...document.querySelectorAll(selector)];
+
+const bootScreen = $("#bootScreen");
+const desktop = $("#desktop");
+
+let topZIndex = 250;
+
+/* 부팅 */
+setTimeout(() => {
+  bootScreen.classList.add("hidden");
+}, 2000);
+
+/* 시계 */
+function updateClock() {
+  const now = new Date();
+
+  const hours = String(now.getHours()).padStart(2, "0");
+  const minutes = String(now.getMinutes()).padStart(2, "0");
+
+  $("#clock").textContent = `${hours}:${minutes}`;
+}
+
+updateClock();
+setInterval(updateClock, 1000);
+
+/* 창 목록 */
+const windows = {
+  home: $("#homeWindow"),
+  profile: $("#profileWindow"),
+  guestbook: $("#guestbookWindow"),
+  diary: $("#diaryWindow"),
+  album: $("#albumWindow"),
+  music: $("#musicWindow")
+};
+
+/* 창을 앞으로 가져오기 */
+function focusWindow(windowElement) {
+  $$(".window").forEach(windowItem => {
+    windowItem.classList.remove("active");
+  });
+
+  windowElement.classList.add("active");
+  windowElement.style.zIndex = ++topZIndex;
+
+  $$(".task-button").forEach(button => {
+    button.classList.toggle(
+      "active",
+      button.dataset.open === windowElement.dataset.name
+    );
+  });
+}
+
+/* 작업 표시줄 버튼 만들기 */
+function createTaskButton(name) {
+  const oldButton = document.querySelector(
+    `.task-button[data-open="${name}"]`
+  );
+
+  if (oldButton) {
+    return;
+  }
+
+  const button = document.createElement("button");
+
+  button.className = "task-button";
+  button.dataset.open = name;
+  button.textContent = `▣ ${name.toUpperCase()}`;
+
+  $("#taskbar").appendChild(button);
+}
+
+/* 창 열기 */
+function openWindow(name) {
+  const windowElement = windows[name];
+
+  if (!windowElement) {
+    return;
+  }
+
+  windowElement.classList.add("open");
+  windowElement.classList.remove("minimized");
+
+  createTaskButton(name);
+  focusWindow(windowElement);
+
+  $("#startMenu").classList.remove("show");
+}
+
+/* data-open 버튼 */
+document.addEventListener("click", event => {
+  const openButton = event.target.closest("[data-open]");
+
+  if (openButton) {
+    openWindow(openButton.dataset.open);
+  }
+});
+
+/* 창 버튼 */
+$$(".window").forEach(windowElement => {
+
+  windowElement.addEventListener("pointerdown", () => {
+    focusWindow(windowElement);
+  });
+
+  windowElement
+    .querySelectorAll("[data-close]")
+    .forEach(button => {
+
+      button.addEventListener("click", () => {
+
+        windowElement.classList.remove("open");
+
+        const taskButton = document.querySelector(
+          `.task-button[data-open="${windowElement.dataset.name}"]`
+        );
+
+        if (windowElement.dataset.name !== "home") {
+          taskButton?.remove();
+        }
+
+      });
+    });
+
+  windowElement
+    .querySelectorAll("[data-minimize]")
+    .forEach(button => {
+
+      button.addEventListener("click", () => {
+        windowElement.style.display = "none";
+
+        setTimeout(() => {
+          windowElement.style.display = "";
+        }, 100);
+      });
+
+    });
+
+  windowElement
+    .querySelectorAll("[data-maximize]")
+    .forEach(button => {
+
+      button.addEventListener("click", () => {
+        windowElement.classList.toggle("maximized");
+      });
+
+    });
+
+});
+
+/* 창 드래그 */
+function enableDragging(windowElement) {
+  const titleBar = windowElement.querySelector(".title-bar");
+
+  let dragging = false;
+  let offsetX = 0;
+  let offsetY = 0;
+
+  titleBar.addEventListener("pointerdown", event => {
+
+    if (
+      window.innerWidth < 850 ||
+      event.target.closest("button") ||
+      windowElement.classList.contains("maximized")
+    ) {
+      return;
+    }
+
+    dragging = true;
+
+    const rect = windowElement.getBoundingClientRect();
+
+    offsetX = event.clientX - rect.left;
+    offsetY = event.clientY - rect.top;
+
+    titleBar.setPointerCapture(event.pointerId);
+  });
+
+  titleBar.addEventListener("pointermove", event => {
+
+    if (!dragging) {
+      return;
+    }
+
+    const workspaceRect = $(".workspace").getBoundingClientRect();
+
+    const left =
+      event.clientX -
+      workspaceRect.left -
+      offsetX;
+
+    const top =
+      event.clientY -
+      workspaceRect.top -
+      offsetY;
+
+    windowElement.style.left = `${Math.max(0, left)}px`;
+    windowElement.style.top = `${Math.max(0, top)}px`;
+  });
+
+  titleBar.addEventListener("pointerup", () => {
+    dragging = false;
+  });
+
+  titleBar.addEventListener("pointercancel", () => {
+    dragging = false;
+  });
+}
+
+$$(".window").forEach(enableDragging);
+
+/* 시작 메뉴 */
+$("#startButton").addEventListener("click", event => {
+  event.stopPropagation();
+  $("#startMenu").classList.toggle("show");
+});
+
+document.addEventListener("click", event => {
+
+  if (
+    !event.target.closest("#startMenu") &&
+    !event.target.closest("#startButton")
+  ) {
+    $("#startMenu").classList.remove("show");
+  }
+
+});
+
+/* 돌고래 메시지 */
+const dolphinMessages = [
+  {
+    text: "오늘의 파란 미래를 발견했습니다.",
+    mood: "clear",
+    signal: "99%"
+  },
+  {
+    text: "구름 서버에 접속 중입니다...",
+    mood: "dreamy",
+    signal: "97%"
+  },
+  {
+    text: "당신의 기분을 ‘맑음’으로 저장했습니다.",
+    mood: "aqua",
+    signal: "98%"
+  },
+  {
+    text: "2001년에서 온 메시지가 도착했습니다.",
+    mood: "nostalgic",
+    signal: "96%"
+  },
+  {
+    text: "방명록에 흔적을 남겨 주세요.",
+    mood: "online",
+    signal: "100%"
+  }
+];
+
+let messageIndex = -1;
+
+function changeDolphinMessage() {
+  messageIndex =
+    (messageIndex + 1) %
+    dolphinMessages.length;
+
+  const message = dolphinMessages[messageIndex];
+
+  $("#assistantText").textContent = message.text;
+  $("#mood").textContent = message.mood;
+  $("#signal").textContent = message.signal;
+}
+
+$("#dolphin").addEventListener(
+  "click",
+  changeDolphinMessage
+);
+
+$("#moodButton").addEventListener(
+  "click",
+  changeDolphinMessage
+);
+
+/* 하늘 변경 */
+let changedSky = false;
+
+$("#changeSky").addEventListener("click", () => {
+
+  changedSky = !changedSky;
+
+  if (changedSky) {
+    document.body.style.filter =
+      "hue-rotate(45deg) saturate(.9)";
+  } else {
+    document.body.style.filter = "";
+  }
+
+});
+
+/* 팝업 */
+function showModal(message) {
+  $("#modalText").textContent = message;
+  $("#modal").classList.add("show");
+}
+
+$("#modalClose").addEventListener("click", () => {
+  $("#modal").classList.remove("show");
+});
+
+$("#modal").addEventListener("click", event => {
+
+  if (event.target === $("#modal")) {
+    $("#modal").classList.remove("show");
+  }
+
+});
+
+$("#findFuture").addEventListener("click", () => {
+
+  showModal(
+    "미래를 찾았습니다. 오늘 필요한 것은 파란 하늘과 조금의 여유입니다."
+  );
+
+});
+
+$$("[data-message]").forEach(button => {
+
+  button.addEventListener("click", () => {
+    showModal(button.dataset.message);
+  });
+
+});
+
+/* 방명록 */
+const defaultGuestEntries = [
+  {
+    name: "blue",
+    message: "파란 미래에 접속 완료 ✦"
+  },
+  {
+    name: "cloud",
+    message: "돌고래야 오늘도 잘 부탁해"
+  },
+  {
+    name: "anonymous",
+    message: "이 홈페이지 진짜 2001년 같아"
+  }
+];
+
+function escapeHTML(text) {
+  return String(text).replace(
+    /[&<>"']/g,
+    character => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#039;"
+    })[character]
+  );
+}
+
+function getGuestEntries() {
+  try {
+    const saved =
+      localStorage.getItem("blueDolphinGuestbook");
+
+    if (saved) {
+      return JSON.parse(saved);
+    }
+  } catch (error) {
+    console.log(error);
+  }
+
+  return defaultGuestEntries;
+}
+
+function renderGuestEntries() {
+  const entries = getGuestEntries();
+
+  $("#guestList").innerHTML =
+    entries
+      .map((entry, index) => {
+
+        const number =
+          String(entries.length - index)
+            .padStart(2, "0");
+
+        return `
+          <div class="guest-entry">
+            <strong>
+              No.${number} · ${escapeHTML(entry.name)}
+            </strong>
+            <br>
+            ${escapeHTML(entry.message)}
+          </div>
+        `;
+      })
+      .join("");
+}
+
+renderGuestEntries();
+
+$("#guestForm").addEventListener("submit", event => {
+
+  event.preventDefault();
+
+  const name =
+    $("#guestName").value.trim() ||
+    "anonymous";
+
+  const message =
+    $("#guestMessage").value.trim();
+
+  if (!message) {
+    showModal("메시지를 입력해 주세요.");
+    return;
+  }
+
+  const entries = getGuestEntries();
+
+  entries.unshift({
+    name,
+    message
+  });
+
+  localStorage.setItem(
+    "blueDolphinGuestbook",
+    JSON.stringify(entries.slice(0, 50))
+  );
+
+  $("#guestMessage").value = "";
+
+  renderGuestEntries();
+
+  showModal(
+    "방명록이 현재 브라우저에 저장되었습니다."
+  );
+
+});
+
+/* 음악 */
+let audioContext;
+let musicPlaying = false;
+let musicTimer;
+
+const notes = [
+  261.63,
+  329.63,
+  392.00,
+  523.25,
+  392.00,
+  329.63,
+  293.66,
+  349.23
+];
+
+let noteIndex = 0;
+
+function playNote() {
+
+  if (!musicPlaying) {
+    return;
+  }
+
+  const oscillator =
+    audioContext.createOscillator();
+
+  const gain =
+    audioContext.createGain();
+
+  oscillator.type = "square";
+  oscillator.frequency.value =
+    notes[noteIndex % notes.length];
+
+  noteIndex++;
+
+  gain.gain.setValueAtTime(
+    0.035,
+    audioContext.currentTime
+  );
+
+  gain.gain.exponentialRampToValueAtTime(
+    0.001,
+    audioContext.currentTime + 0.18
+  );
+
+  oscillator
+    .connect(gain)
+    .connect(audioContext.destination);
+
+  oscillator.start();
+
+  oscillator.stop(
+    audioContext.currentTime + 0.2
+  );
+}
+
+$("#playButton").addEventListener("click", async () => {
+
+  if (musicPlaying) {
+
+    musicPlaying = false;
+
+    clearInterval(musicTimer);
+
+    $("#player").classList.remove("playing");
+    $("#cd").classList.remove("playing");
+
+    $("#playButton").textContent = "▶ PLAY";
+
+    return;
+  }
+
+  audioContext =
+    audioContext ||
+    new (
+      window.AudioContext ||
+      window.webkitAudioContext
+    )();
+
+  musicPlaying = true;
+
+  $("#player").classList.add("playing");
+  $("#cd").classList.add("playing");
+
+  $("#playButton").textContent = "■ STOP";
+
+  playNote();
+
+  musicTimer = setInterval(
+    playNote,
+    240
+  );
+
+});
+
+/* 종료 */
+$("#shutdownButton").addEventListener("click", () => {
+
+  bootScreen
+    .querySelector("small")
+    .textContent =
+      "접속을 종료했습니다. 화면을 클릭하면 다시 접속합니다.";
+
+  bootScreen.classList.remove("hidden");
+});
+
+bootScreen.addEventListener("click", () => {
+  bootScreen.classList.add("hidden");
+});
+
+/* 클릭 반짝임 */
+document.addEventListener("pointerdown", event => {
+
+  const spark =
+    document.createElement("span");
+
+  spark.className = "spark";
+  spark.textContent = "✦";
+
+  spark.style.left =
+    `${event.clientX}px`;
+
+  spark.style.top =
+    `${event.clientY}px`;
+
+  document.body.appendChild(spark);
+
+  setTimeout(() => {
+    spark.remove();
+  }, 750);
+
+});
+
+/* 처음 홈 창 활성화 */
+focusWindow($("#homeWindow"));
+</script>
+
+</body>
+</html>
